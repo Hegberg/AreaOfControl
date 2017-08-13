@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class NetworkManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    public GameObject mainNonPlayerCamera;
+
+    // Use this for initialization
+    void Start () {
 		Connect();
     }
 
@@ -44,6 +46,13 @@ public class NetworkManager : MonoBehaviour {
 
     void SpawnMyPlayer()
     {
-        PhotonNetwork.Instantiate("RedTile", new Vector3(0,0,0), Quaternion.identity, 0);
+        //spawn player and set mainCamera to be disabled so it does not interfer with the player camera, also disables it's audio listener
+        GameObject myPlayer = (GameObject)PhotonNetwork.Instantiate("RedTile", new Vector3(0,0,-2), Quaternion.identity, 0);
+        mainNonPlayerCamera.SetActive(false);
+
+        //keeps other players that are spawned in from having their controlls and camera enabled
+        //player object requires move script and camera to be disabled for this to work
+        myPlayer.GetComponent<Camera>().enabled = true;
+        myPlayer.GetComponent<SimpleMove>().enabled = true;
     }
 }
